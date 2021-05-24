@@ -8,8 +8,11 @@ authors = ["rkhakov <khakov.ruslan@gmail.com>"]
 python = "^3.9"
 fastapi = "^0.65.1"
 uvicorn = {extras = ["standard"], version = "^0.13.4"}
+python-jose = {extras = ["cryptography"], version = "^3.2.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 [tool.poetry.dev-dependencies]
+ipython = "^7.23.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

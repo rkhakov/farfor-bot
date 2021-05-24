@@ -6,9 +6,14 @@ authors = ["rkhakov <khakov.ruslan@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+fastapi = "^0.65.1"
+uvicorn = {extras = ["standard"], version = "^0.13.4"}
 
 [tool.poetry.dev-dependencies]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+farfor_bot = "farfor_bot.__main__:entrypoint"

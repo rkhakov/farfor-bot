@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from farfor_bot.api.dependencies import get_db
-from farfor_bot.schemas import Token
+from farfor_bot.schemas import TokenSchema
 from farfor_bot.repositories import user_repository
 from farfor_bot.secutiry import create_access_token
 from farfor_bot.config import settings
@@ -14,7 +14,7 @@ from farfor_bot.config import settings
 router = APIRouter()
 
 
-@router.post("/access-token", response_model=Token)
+@router.post("/access-token", response_model=TokenSchema)
 def access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
     
     user = user_repository.authenticate(

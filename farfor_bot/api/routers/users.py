@@ -67,13 +67,20 @@ def update_user(
     db: Session = Depends(get_db),
     user_id: int,
     user_schema: UserUpdateSchema,
-    current_user: User = Depends(get_superuser),
+    current_user: User = Depends(get_user),
 ):
-    user = user_repository(db, id=user_id)
+    user = user_repository.get(db, id=user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден",
         )
+    
+    if user == current_user:
+        user = user_repository.update(db, db_obj=user, obj_schema=user_schema)
+        return user
+    
+    if not user_repository.is_superuser(current_user):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав")
     
     user = user_repository.update(db, db_obj=user, obj_schema=user_schema)
     return user

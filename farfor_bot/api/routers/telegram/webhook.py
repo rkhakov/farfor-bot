@@ -1,29 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import HttpUrl, BaseModel, Field
+from sqlalchemy.orm import Session
 
 from farfor_bot.config import settings
+from farfor_bot.models import User
 from farfor_bot.services import telegram_service
-
+from farfor_bot.api.dependencies import get_db, get_superuser
 
 
 router = APIRouter()
 
 
-class FromUser(BaseModel):
+class UserSchema(BaseModel):
     id: int
     first_name: str
     username: str
 
 
-class Message(BaseModel):
+class MessageSchema(BaseModel):
     message_id: int
     text: str
-    from_user: FromUser = Field(alias="from")
+    from_user: UserSchema = Field(alias="from")
 
 
-class WebhookData(BaseModel):
+class WerbhookSchema(BaseModel):
     update_id: int
-    message: Message
+    message: MessageSchema
     
     class Config:
         schema_extra = {
@@ -39,28 +41,28 @@ class WebhookData(BaseModel):
         }
 
 
-@router.post("/webhook/{telegram_token}")
-async def webhook(telegram_token: str, webhook_data: WebhookData):
+@router.post("/{telegram_token}")
+async def webhook(telegram_token: str, webhook_schema: WerbhookSchema):
     if telegram_token != settings.TELEGRAM_TOKEN:
         raise HTTPException(status_code=401, detail="Некорректный токен")
 
     return {"success": True}
 
 
-@router.put("/webhook")
-def set_webhook_url(domain: HttpUrl):
+@router.put("/")
+def set_webhook_url(domain: HttpUrl, current_user: User = Depends(get_superuser)):
     url = f'{domain}/api/telegram/webhook/{settings.TELEGRAM_TOKEN}'
     result = telegram_service.set_webhook(url)
     return {"success": result}
 
 
-@router.get("/webhook")
-def get_webhook_url():
+@router.get("/")
+def get_webhook_url(current_user: User = Depends(get_superuser)):
     webhook_info = telegram_service.get_webhook_info()
     return {"webhook_url": webhook_info.url}
 
 
-@router.delete("/webhook")
-def delete_webhook_url():
+@router.delete("/")
+def delete_webhook_url(current_user: User = Depends(get_superuser)):
     result = telegram_service.delete_webhook()
     return {"success": result}

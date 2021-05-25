@@ -11,7 +11,7 @@ from farfor_bot.config import settings
 from farfor_bot.database.core import SessionLocal
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
-from farfor_bot.schemas import TokenPayload
+from farfor_bot.schemas import TokenPayloadSchema
 from farfor_bot.secutiry import ALGORITHM
 
 
@@ -28,8 +28,11 @@ def get_db() -> Generator:
 
 def get_user(db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)) -> User:
     try:
+        # Декодируем токен
+        # На выходе получим изначально закодированный дикт
+        # {"exp": 1622646445, "user_id": 1}
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
-        token_data = TokenPayload(**payload)
+        token_data = TokenPayloadSchema(**payload)
     except (jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -58,3 +61,12 @@ def get_superuser(user: User = Depends(get_user)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав")
     return user
 
+
+def get_admin_or_superuser(user: User = Depends(get_user)):
+    if user_repository.is_admin(user):
+        return user
+    
+    if user_repository.is_superuser(user):
+        return user
+    
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав")

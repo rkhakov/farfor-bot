@@ -10,15 +10,19 @@ class TelegramUserBaseSchema(BaseModel):
     staff_point_id: int
     staff_module: str
     is_active: bool = True
-    
-    class Config:
-        orm_mode = True
+
+
+class TelegramUserCreateSchema(TelegramUserBaseSchema):
+    user_id: int
+
+
+class TelegramUserUpdateSchema(TelegramUserBaseSchema):
+    pass
 
 
 class TelegramUserSchema(TelegramUserBaseSchema):
     id: int
     user_id: int
     
-
-class TelegramUserUpdateSchema(TelegramUserBaseSchema):
-    pass
+    class Config:
+        orm_mode = True

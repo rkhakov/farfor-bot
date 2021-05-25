@@ -3,7 +3,11 @@ from farfor_bot.schemas.telegram_user import TelegramUserUpdateSchema
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
-from farfor_bot.schemas import TelegramUserSchema, TelegramUserUpdateSchema
+from farfor_bot.schemas import (
+    TelegramUserSchema,
+    TelegramUserUpdateSchema,
+    TelegramUserCreateSchema,
+)
 from farfor_bot.models import User
 from farfor_bot.api.dependencies import get_db, get_admin_or_superuser
 from farfor_bot.repositories import telegram_user_repository
@@ -24,7 +28,7 @@ def get_telegram_users(
 
 @router.post("/", response_model=TelegramUserSchema)
 def create_telegram_user(
-    obj_schema: TelegramUserSchema,
+    obj_schema: TelegramUserCreateSchema,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_admin_or_superuser),
 ):

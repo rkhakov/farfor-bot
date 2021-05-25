@@ -1,12 +1,12 @@
 from typing import List
 from farfor_bot.models import TelegramUser
-from farfor_bot.schemas import TelegramUserSchema, TelegramUserUpdateSchema
+from farfor_bot.schemas import TelegramUserCreateSchema, TelegramUserUpdateSchema
 from sqlalchemy.orm import Session
 
 from .base import BaseRepository
 
 
-class TelegramUserRepository(BaseRepository[TelegramUser, TelegramUserSchema, TelegramUserUpdateSchema]):
+class TelegramUserRepository(BaseRepository[TelegramUser, TelegramUserCreateSchema, TelegramUserUpdateSchema]):
     def get_manager_by_point_ids(self, db: Session, *, point_ids: List[int]):
         return db.query(TelegramUser).filter(
             TelegramUser.staff_point_id.in_ == point_ids,

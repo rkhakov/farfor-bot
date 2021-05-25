@@ -17,6 +17,7 @@ alembic = "^1.6.3"
 sh = "^1.14.2"
 tabulate = "^0.8.9"
 python-telegram-bot = "^13.5"
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.23.1"

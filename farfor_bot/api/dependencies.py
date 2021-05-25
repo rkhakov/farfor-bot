@@ -1,8 +1,8 @@
-from typing import Generator
+from typing import Generator, Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
-from pydantic import ValidationError
+from pydantic import ValidationError, BaseModel
 from sqlalchemy.orm.session import Session
 from jose import jwt
 
@@ -10,11 +10,14 @@ from farfor_bot.config import settings
 from farfor_bot.database.core import SessionLocal
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
-from farfor_bot.schemas import TokenPayloadSchema
 from farfor_bot.secutiry import ALGORITHM
 
 
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/api/auth/access-token")
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/api/auth/login")
+
+
+class TokenPayloadSchema(BaseModel):
+    user_id: Optional[int] = None
 
 
 def get_db() -> Generator:

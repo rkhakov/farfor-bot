@@ -3,17 +3,16 @@ from pydantic import HttpUrl, BaseModel, Field
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from farfor_bot.config import settings
-from farfor_bot.models import User
 from farfor_bot.services import telegram_service
-from farfor_bot.schemas import TelegramUserCreateSchema
+from farfor_bot.schemas import StaffCreateSchema
 from farfor_bot.api.dependencies import get_db, get_superuser
-from farfor_bot.repositories import telegram_user_repository
+from farfor_bot.repositories import staff_repository
 
 
 router = APIRouter()
 
 
-class TgUserSchema(BaseModel):
+class ChatSchema(BaseModel):
     id: int
     first_name: str
     username: str
@@ -22,7 +21,7 @@ class TgUserSchema(BaseModel):
 class MessageSchema(BaseModel):
     message_id: int
     text: str
-    from_user: TgUserSchema = Field(alias="from")
+    chat: ChatSchema = Field(alias="from")
 
 
 class WebhookSchema(BaseModel):
@@ -52,9 +51,7 @@ class ResponseSchema(BaseModel):
     responses={200: {"model": ResponseSchema}}
 )
 async def webhook(
-    telegram_token: str, 
-    webhook_schema: WebhookSchema,
-    db: Session = Depends(get_db)
+    telegram_token: str, webhook_schema: WebhookSchema, db: Session = Depends(get_db),
 ):
     if telegram_token != settings.TELEGRAM_TOKEN:
         raise HTTPException(status_code=401, detail="Некорректный токен")
@@ -62,43 +59,43 @@ async def webhook(
     if webhook_schema.message.text != "/start":
         return JSONResponse(content={"success": True})
     
-    user_data = webhook_schema.message.from_user
-    telegram_user = telegram_user_repository.get_by_user_id(db, user_id=user_data.id)
+    chat = webhook_schema.message.chat
+    telegram_user = staff_repository.get_by_user_id(db, user_id=chat.id)
     if telegram_user:
         return JSONResponse(content={"success": True})
     
-    tg_user_schema = TelegramUserCreateSchema(
-        name=user_data.first_name,
-        user_id=user_data.id,
+    staff_schema = StaffCreateSchema(
+        name=chat.first_name,
+        user_id=chat.id,
         staff_city_id=0,
         staff_point_id=0,
         staff_module="manager",
     )
 
-    telegram_user_repository.create(db, obj_schema=tg_user_schema)
+    staff_repository.create(db, obj_schema=staff_schema)
     
-    message = f"""{tg_user_schema.name}, добро пожаловать в Фарфор Бот
-Ваш ID: {tg_user_schema.user_id}
-Для подключения к боту, обратитесь в техподдержку, сообщив им Ваш ID.
+    message = f"""{staff_schema.name}, добро пожаловать в Фарфор Бот
+Ваш ID: {staff_schema.chat_id}
+Для подключения к боту, обратитесь в техподдержку, сообщив им Ваш ID и логин в ERP
 """
-    telegram_service.send_message(chat_id=tg_user_schema.user_id, message=message)
+    telegram_service.send_message(chat_id=staff_schema.chat_id, message=message)
     return JSONResponse(content={"success": True})
 
 
-@router.put("/")
-def set_webhook_url(domain: HttpUrl, current_user: User = Depends(get_superuser)):
-    url = f'{domain}/api/telegram/webhook/{settings.TELEGRAM_TOKEN}'
+@router.put("/", dependencies=[Depends(get_superuser)])
+def set_webhook_url(domain: HttpUrl):
+    url = f'{domain}/api/webhook/{settings.TELEGRAM_TOKEN}'
     result = telegram_service.set_webhook(url)
     return {"success": result}
 
 
-@router.get("/")
-def get_webhook_url(current_user: User = Depends(get_superuser)):
+@router.get("/", dependencies=[Depends(get_superuser)])
+def get_webhook_url():
     webhook_info = telegram_service.get_webhook_info()
     return {"webhook_url": webhook_info.url}
 
 
-@router.delete("/")
-def delete_webhook_url(current_user: User = Depends(get_superuser)):
+@router.delete("/", dependencies=[Depends(get_superuser)])
+def delete_webhook_url():
     result = telegram_service.delete_webhook()
     return {"success": result}

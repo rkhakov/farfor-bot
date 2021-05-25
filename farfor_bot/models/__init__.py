@@ -1,5 +1,5 @@
 from .user import User
-from .telegram_user import TelegramUser
+from .staff import Staff
 
 
-__all__ = ["User", "TelegramUser"]
+__all__ = ["User", "Staff"]

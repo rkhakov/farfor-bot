@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 from . import auth
 from . import users
-from . import telegram
+from . import staff
+from . import webhook
 
 
 api_router = APIRouter(prefix="/api")
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
-api_router.include_router(telegram.api_router, prefix="/telegram", tags=["telegram"])
+api_router.include_router(staff.router, prefix="/staff", tags=["staff"])
+api_router.include_router(webhook.router, prefix="/webhook", tags=["webhook"])

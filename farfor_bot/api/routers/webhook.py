@@ -60,16 +60,17 @@ async def webhook(
         return JSONResponse(content={"success": True})
     
     chat = webhook_schema.message.chat
-    telegram_user = staff_repository.get_by_user_id(db, user_id=chat.id)
+    telegram_user = staff_repository.get_by_chat_id(db, chat_id=chat.id)
     if telegram_user:
         return JSONResponse(content={"success": True})
     
     staff_schema = StaffCreateSchema(
         name=chat.first_name,
-        user_id=chat.id,
-        staff_city_id=0,
-        staff_point_id=0,
-        staff_module="manager",
+        erp_username="",
+        chat_id=chat.id,
+        city_id=0,
+        point_id=0,
+        module="manager",
     )
 
     staff_repository.create(db, obj_schema=staff_schema)

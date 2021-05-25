@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 from functools import lru_cache
 
-from pydantic import AnyHttpUrl, BaseSettings, PostgresDsn, validator
+from pydantic import BaseSettings, PostgresDsn, validator
 
 
 class Settings(BaseSettings):
@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
+
         return PostgresDsn.build(
             scheme="postgresql",
             host=values.get("DATABASE_HOST"),

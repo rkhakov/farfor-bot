@@ -1,5 +1,4 @@
 import re
-from typing import Generator
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base, declared_attr

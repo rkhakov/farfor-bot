@@ -114,7 +114,7 @@ def revision_database(message, autogenerate):
 def upgrade_database(revision):
     """Обновить состояние базы до последней (или указанной) версии ревизии"""
     from sqlalchemy_utils import database_exists, create_database
-    from alembic.migration import MigrationContext
+    from alembic.runtime.migration import MigrationContext
 
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     if not database_exists(settings.SQLALCHEMY_DATABASE_URI):
@@ -143,8 +143,7 @@ def downgrade_database(revision):
     Для того чтобы откатится на предыдущую ревизию, необходимо передать -1
     
     Пример:
-    
-        >>> farfof_bot database downgrade -r -1
+        > farfof_bot database downgrade -r -1
     """
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.downgrade(alembic_cfg, revision, sql=False, tag=None)
@@ -166,7 +165,6 @@ def drop_database(yes):
     ):
         drop_database(settings.SQLALCHEMY_DATABASE_URI)
         click.secho("Success.", fg="green")
-
 
 
 @database.command("dump")

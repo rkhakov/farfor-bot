@@ -1,8 +1,7 @@
 from typing import List
 
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, status, Body
-from starlette.status import HTTP_404_NOT_FOUND
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from farfor_bot.api.dependencies import get_db, get_user, get_superuser
 from farfor_bot.models import User

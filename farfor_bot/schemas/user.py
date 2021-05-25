@@ -36,4 +36,3 @@ class UserSchema(UserInDBBaseSchema):
 
 class UserInDBSchema(UserInDBBaseSchema):
     hashed_password: str
-    

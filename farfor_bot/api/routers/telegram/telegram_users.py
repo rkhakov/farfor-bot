@@ -1,5 +1,3 @@
-from farfor_bot.models.telegram_user import TelegramUser
-from farfor_bot.schemas.telegram_user import TelegramUserUpdateSchema
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status

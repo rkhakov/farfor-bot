@@ -1,5 +1,5 @@
 from telegram import Bot
-from pydantic import HttpUrl, BaseModel
+from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 
 from farfor_bot.config import settings
@@ -8,7 +8,7 @@ from farfor_bot.config import settings
 bot = Bot(token=settings.TELEGRAM_TOKEN)
 
 
-def send_photo(chat_id: int, photo_url: HttpUrl, caption: str):
+def send_photo(chat_id: int, photo_url: str, caption: str):
     bot.send_photo(chat_id=chat_id, photo=photo_url, caption=caption)
     
     
@@ -25,7 +25,7 @@ def get_webhook_info() -> WebhookInfoSchema:
     return WebhookInfoSchema(**webhook_info_data)
 
 
-def set_webhook(url: HttpUrl):
+def set_webhook(url: str):
     return bot.set_webhook(str(url))
 
 

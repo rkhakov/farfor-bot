@@ -1,10 +1,10 @@
 from typing import Generator, Optional
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-
-from pydantic import ValidationError, BaseModel
-from sqlalchemy.orm.session import Session
 from jose import jwt
+from pydantic import BaseModel, ValidationError
+from sqlalchemy.orm.session import Session
 
 from farfor_bot.config import settings
 from farfor_bot.database.core import SessionLocal

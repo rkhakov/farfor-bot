@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, String
+
 from farfor_bot.database.core import Base
 
 

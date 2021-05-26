@@ -1,9 +1,6 @@
 from fastapi import APIRouter
-from . import auth
-from . import users
-from . import staff
-from . import webhook
-from . import broadcast
+
+from . import auth, broadcast, staff, users, webhook
 
 
 api_router = APIRouter(prefix="/api")

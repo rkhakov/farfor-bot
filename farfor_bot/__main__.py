@@ -1,8 +1,8 @@
 """CLI проекта"""
-import click
 import os
-import uvicorn
 
+import click
+import uvicorn
 from alembic import command as alembic_command
 from alembic.config import Config as AlembicConfig
 from tabulate import tabulate
@@ -45,6 +45,7 @@ def run_server(log_level: str = "debug"):
 def shell(ipython_args):
     """Запусть Shell IPython"""
     import sys
+
     import IPython
     from IPython.terminal.ipapp import load_default_config
 
@@ -120,8 +121,8 @@ def revision_database(message, autogenerate):
 @click.option("-r", "--revision", nargs=1, default="head", help="Идентификатор ревизии")
 def upgrade_database(revision):
     """Обновить состояние базы до последней (или указанной) версии ревизии"""
-    from sqlalchemy_utils import database_exists, create_database
     from alembic.runtime.migration import MigrationContext
+    from sqlalchemy_utils import create_database, database_exists
 
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     if not database_exists(settings.SQLALCHEMY_DATABASE_URI):

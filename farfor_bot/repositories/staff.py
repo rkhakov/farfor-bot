@@ -1,7 +1,9 @@
 from typing import List
+
+from sqlalchemy.orm import Session
+
 from farfor_bot.models import Staff
 from farfor_bot.schemas import StaffCreateSchema, StaffUpdateSchema
-from sqlalchemy.orm import Session
 
 from .base import BaseRepository
 

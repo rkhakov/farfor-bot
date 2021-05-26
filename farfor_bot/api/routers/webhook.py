@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import HttpUrl, BaseModel, Field
-from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
-from farfor_bot.config import settings
-from farfor_bot.services import telegram_service
-from farfor_bot.schemas import StaffCreateSchema
+from pydantic import BaseModel, Field, HttpUrl
+from sqlalchemy.orm import Session
+
 from farfor_bot.api.dependencies import get_db, get_superuser
+from farfor_bot.config import settings
 from farfor_bot.repositories import staff_repository
+from farfor_bot.schemas import StaffCreateSchema
+from farfor_bot.services import telegram_service
 
 
 router = APIRouter()

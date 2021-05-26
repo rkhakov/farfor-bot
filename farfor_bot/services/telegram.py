@@ -1,6 +1,6 @@
-from telegram import Bot
-from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
+from telegram import Bot
 
 from farfor_bot.config import settings
 

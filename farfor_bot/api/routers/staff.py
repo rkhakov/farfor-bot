@@ -1,13 +1,11 @@
 from typing import List
-from sqlalchemy.orm import Session
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from farfor_bot.schemas import (
-    StaffSchema,
-    StaffUpdateSchema,
-    StaffCreateSchema,
-)
-from farfor_bot.api.dependencies import get_db, get_admin_or_superuser
+from sqlalchemy.orm import Session
+
+from farfor_bot.api.dependencies import get_admin_or_superuser, get_db
 from farfor_bot.repositories import staff_repository
+from farfor_bot.schemas import StaffCreateSchema, StaffSchema, StaffUpdateSchema
 
 
 router = APIRouter(dependencies=[Depends(get_admin_or_superuser)])

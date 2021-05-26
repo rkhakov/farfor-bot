@@ -1,12 +1,12 @@
 from typing import List
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, AnyHttpUrl
+from pydantic import AnyHttpUrl, BaseModel
 from sqlalchemy.orm import Session
 
 from farfor_bot.api.dependencies import get_db
-from farfor_bot.services import telegram_service
 from farfor_bot.repositories import staff_repository
+from farfor_bot.services import telegram_service
 
 
 router = APIRouter()

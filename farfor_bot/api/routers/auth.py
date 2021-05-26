@@ -7,11 +7,12 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from farfor_bot.api.dependencies import get_db, get_user
+from farfor_bot.config import settings
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
 from farfor_bot.schemas import UserSchema
 from farfor_bot.secutiry import create_access_token
-from farfor_bot.config import settings
+
 
 router = APIRouter()
 

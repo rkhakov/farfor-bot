@@ -1,12 +1,13 @@
 from typing import List
 
-from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
-from farfor_bot.api.dependencies import get_db, get_user, get_superuser
+from farfor_bot.api.dependencies import get_db, get_superuser, get_user
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
-from farfor_bot.schemas import UserSchema, UserCreateSchema, UserUpdateSchema
+from farfor_bot.schemas import UserCreateSchema, UserSchema, UserUpdateSchema
+
 
 router = APIRouter()
 

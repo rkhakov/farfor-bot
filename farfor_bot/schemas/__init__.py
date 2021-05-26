@@ -1,5 +1,5 @@
-from .user import UserSchema, UserCreateSchema, UserUpdateSchema
-from .staff import StaffSchema, StaffUpdateSchema, StaffCreateSchema
+from .staff import StaffCreateSchema, StaffSchema, StaffUpdateSchema
+from .user import UserCreateSchema, UserSchema, UserUpdateSchema
 
 
 __all__ = [

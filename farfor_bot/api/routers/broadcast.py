@@ -14,8 +14,7 @@ router = APIRouter()
 
 class CameraEvent(BaseModel):
     order_id: int
-    city_id: int
-    point_ids: List[int]
+    usernames: List[str]
     station: str
     snapshot_url: AnyHttpUrl
 
@@ -28,8 +27,8 @@ class ResponseSchema(BaseModel):
 def camera_event(event: CameraEvent, db: Session = Depends(get_db)):
     caption = f"Заказ: {event.order_id}\nСтанция: {event.station}"
 
-    staff_objects = staff_repository.get_manager_by_point_ids(
-        db, point_ids=event.point_ids
+    staff_objects = staff_repository.get_by_erp_usernames(
+        db, erp_usernames=event.usernames
     )
 
     for staff in staff_objects:

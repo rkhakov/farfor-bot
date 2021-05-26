@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, SmallInteger, String
+from sqlalchemy import Boolean, Column, Integer, String
 
 from farfor_bot.database.core import Base
 
@@ -8,9 +8,6 @@ class Staff(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     chat_id = Column(Integer, unique=True, nullable=False)
-    erp_username = Column(String)
+    erp_username = Column(String, index=True)
     name = Column(String)
-    city_id = Column(SmallInteger, nullable=False)
-    point_id = Column(SmallInteger, index=True, nullable=False)
-    module = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)

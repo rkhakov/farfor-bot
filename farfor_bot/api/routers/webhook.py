@@ -66,11 +66,8 @@ async def webhook(
 
     staff_schema = StaffCreateSchema(
         name=chat.first_name,
-        erp_username="",
+        erp_username="NULL",  # будет устанавливаться вручную
         chat_id=chat.id,
-        city_id=0,
-        point_id=0,
-        module="manager",
     )
 
     staff_repository.create(db, obj_schema=staff_schema)

@@ -30,13 +30,18 @@ def server():
 
 
 @server.command("develop")
-def run_server(log_level: str = "debug"):
-    # TODO Добавить выбор уровня логов
+@click.option(
+    "--port",
+    default=8900,
+    help="Порт запускаемого uvicorn приложения. По умолчанию 8900",
+)
+@click.option("--log-level", default="debug", help="Уровень логов")
+def run_server(log_level: str, port: int):
     uvicorn.run(
         "farfor_bot.main:app",
         debug=True,
         log_level=log_level,
-        port=settings.DEV_SERVER_PORT,
+        port=port,
     )
 
 

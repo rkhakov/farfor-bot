@@ -55,22 +55,6 @@ def get_user(
 
 
 def get_admin(user: User = Depends(get_user)):
-    if not user_repository.is_admin(user):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
-        )
-    return user
-
-
-def get_superuser(user: User = Depends(get_user)):
-    if not user_repository.is_superuser(user):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
-        )
-    return user
-
-
-def get_admin_or_superuser(user: User = Depends(get_user)):
     if user_repository.is_admin(user):
         return user
 
@@ -80,3 +64,11 @@ def get_admin_or_superuser(user: User = Depends(get_user)):
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
     )
+
+
+def get_superuser(user: User = Depends(get_user)):
+    if not user_repository.is_superuser(user):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
+        )
+    return user

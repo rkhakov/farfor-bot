@@ -5,16 +5,12 @@ from pydantic import BaseModel
 
 class StaffBaseSchema(BaseModel):
     name: Optional[str] = None
-    erp_username: Optional[str] = None
-    city_id: int
-    point_id: int
-    module: str
+    erp_username: str
     is_active: bool = True
 
 
 class StaffCreateSchema(StaffBaseSchema):
     chat_id: int
-    erp_username: str
 
 
 class StaffUpdateSchema(StaffBaseSchema):

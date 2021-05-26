@@ -25,11 +25,10 @@ ENV PYTHONBUFFERED=1 \
     POETRY_NO_INTERACTION=1 \
     \
     # Пути
-    # директория для файлов зависимостей poetry.lock pyproject.toml
-    # отсюда будет запускаться poetry install
-    PYSETUP_PATH="/opt/pysetup" \
+    # директория в которую будет скопирован проект для сборки
+    PROJECT_SETUP_PATH="/opt/project_setup" \
     # Директория виртуального окружения
-    VENV_PATH="/opt/pysetup/.venv"
+    VENV_PATH="/opt/project_setup/.venv"
 
 # Добавляем в PATH бинари poetry и .venv
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
@@ -47,14 +46,15 @@ RUN apt-get update \
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
 # Меняем рабочую директорию
-WORKDIR $PYSETUP_PATH
+WORKDIR $PROJECT_SETUP_PATH
 
-# Устанавливаем зависимости отдельно чтобы закешировать
+# Билдим отдельно чтобы закешировать
 # Docker пропустит этот шаг если файлы не изменятся
-# на этом шаге будет создан .venv в текущей директории
 COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --no-dev
+COPY ./farfor_bot ./farfor_bot
+RUN poetry build
 
+RUN pip install -U ./dist/*.whl
 
 # Образ для прода
 FROM python-base as production
@@ -62,12 +62,8 @@ ENV PROJECT_ENV=production
 
 COPY --from=builder $VENV_PATH $VENV_PATH
 COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
-
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
-
-COPY ./farfor_bot /app/farfor_bot/
-WORKDIR /app
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--config", "/gunicorn_conf.py", "farfor_bot.main:app"]

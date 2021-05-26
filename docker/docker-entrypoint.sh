@@ -2,10 +2,10 @@
 
 set -e
 
-. /opt/pysetup/.venv/bin/activate
+# тут запускаем скрипты необходимые перед запуском проекта
 
-# выполняем необходимые таски перед запуском приложения
-# python -m farfor_bot database upgrade
+# накатываем миграции
+farfor_bot database upgrade
 
 
 exec "$@"

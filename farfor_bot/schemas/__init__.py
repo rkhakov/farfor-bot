@@ -6,6 +6,7 @@ __all__ = [
     UserSchema,
     UserCreateSchema,
     UserUpdateSchema,
+    StaffCreateSchema,
     StaffSchema,
     StaffUpdateSchema,
 ]

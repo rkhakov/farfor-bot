@@ -23,10 +23,8 @@ def get_staff_list(
 @router.post("/", response_model=StaffSchema)
 def create_staff(staff_schema: StaffCreateSchema, db: Session = Depends(get_db)):
     if staff_repository.get_by_chat_id(db, chat_id=staff_schema.chat_id):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Сотрудник с ID телеграм чата {staff_schema.chat_id} уже существует",
-        )
+        error = f"Сотрудник с ID телеграм чата {staff_schema.chat_id} уже существует"
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return staff_repository.create(db, obj_schema=staff_schema)
 
 

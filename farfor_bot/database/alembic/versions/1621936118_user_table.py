@@ -1,7 +1,7 @@
 """user_table
 
 Revision ID: 1621936118
-Revises: 
+Revises:
 Create Date: 2021-05-25 14:48:38.477551
 
 """

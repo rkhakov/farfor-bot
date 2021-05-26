@@ -13,7 +13,7 @@ from farfor_bot.repositories import user_repository
 from farfor_bot.secutiry import ALGORITHM
 
 
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/api/auth/login")
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 class TokenPayloadSchema(BaseModel):

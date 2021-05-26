@@ -169,7 +169,8 @@ def drop_database(yes):
         click.secho("Success.", fg="green")
 
     if click.confirm(
-        f"Вы уверены что хотите удалить базу: '{settings.DATABASE_HOST}:{settings.DATABASE_NAME}'?"
+        f"Вы уверены что хотите удалить базу: "
+        f"'{settings.DATABASE_HOST}:{settings.DATABASE_NAME}'?"
     ):
         drop_database(settings.SQLALCHEMY_DATABASE_URI)
         click.secho("Success.", fg="green")

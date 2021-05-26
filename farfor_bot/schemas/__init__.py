@@ -3,10 +3,10 @@ from .user import UserCreateSchema, UserSchema, UserUpdateSchema
 
 
 __all__ = [
-    UserSchema,
-    UserCreateSchema,
-    UserUpdateSchema,
-    StaffCreateSchema,
-    StaffSchema,
-    StaffUpdateSchema,
+    "UserSchema",
+    "UserCreateSchema",
+    "UserUpdateSchema",
+    "StaffCreateSchema",
+    "StaffSchema",
+    "StaffUpdateSchema",
 ]

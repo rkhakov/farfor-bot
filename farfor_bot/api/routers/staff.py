@@ -27,7 +27,7 @@ def create_staff(staff_schema: StaffCreateSchema, db: Session = Depends(get_db))
     if staff_repository.get_by_chat_id(db, chat_id=staff_schema.chat_id):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Сотрудник с ID телеграм чата {staff_schema.chat_id} уже существует"
+            detail=f"Сотрудник с ID телеграм чата {staff_schema.chat_id} уже существует",
         )
     return staff_repository.create(db, obj_schema=staff_schema)
 
@@ -45,12 +45,15 @@ def get_staff(staff_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{staff_id}", response_model=StaffSchema)
 def update_staff(
-    staff_id: int, obj_schema: StaffUpdateSchema, db: Session = Depends(get_db),
+    staff_id: int,
+    obj_schema: StaffUpdateSchema,
+    db: Session = Depends(get_db),
 ):
     staff = staff_repository.get(db, id=staff_id)
     if not staff:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Сотрудник не найден",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Сотрудник не найден",
         )
 
     staff = staff_repository.update(db, db_obj=staff, obj_schema=obj_schema)
@@ -62,9 +65,9 @@ def delete_staff(staff_id: int, db: Session = Depends(get_db)):
     staff = staff_repository.get(db, id=staff_id)
     if not staff:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Телеграм пользователь не найден",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Телеграм пользователь не найден",
         )
-        
+
     staff = staff_repository.delete(db, id=staff_id)
     return staff
-

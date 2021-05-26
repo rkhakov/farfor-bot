@@ -10,10 +10,10 @@ class Settings(BaseSettings):
     DEV_SERVER_PORT: int = 8900
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 дней
     SECRET_KEY: str
-    
+
     # Telegram
     TELEGRAM_TOKEN: str
-    
+
     # Database
     DATABASE_HOST: str
     DATABASE_PORT: str
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str
     DATABASE_NAME: str
     SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
-        
+
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):

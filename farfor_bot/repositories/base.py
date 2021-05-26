@@ -25,7 +25,7 @@ class BaseRepository(t.Generic[Model, CreateSchema, UpdateSchema]):
     def create(self, db: Session, *, obj_schema: CreateSchema) -> Model:
         obj_data = jsonable_encoder(obj_schema)
         db_obj = self.model(**obj_data)
-        
+
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
@@ -43,7 +43,7 @@ class BaseRepository(t.Generic[Model, CreateSchema, UpdateSchema]):
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
-        
+
         return db_obj
 
     def delete(self, db: Session, *, id: int) -> t.Optional[Model]:

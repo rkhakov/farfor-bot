@@ -27,7 +27,7 @@ class MessageSchema(BaseModel):
 class WebhookSchema(BaseModel):
     update_id: int
     message: MessageSchema
-    
+
     class Config:
         schema_extra = {
             "update_id": 434768931,
@@ -46,24 +46,23 @@ class ResponseSchema(BaseModel):
     status: bool
 
 
-@router.post(
-    "/{telegram_token}",
-    responses={200: {"model": ResponseSchema}}
-)
+@router.post("/{telegram_token}", responses={200: {"model": ResponseSchema}})
 async def webhook(
-    telegram_token: str, webhook_schema: WebhookSchema, db: Session = Depends(get_db),
+    telegram_token: str,
+    webhook_schema: WebhookSchema,
+    db: Session = Depends(get_db),
 ):
     if telegram_token != settings.TELEGRAM_TOKEN:
         raise HTTPException(status_code=401, detail="Некорректный токен")
-    
+
     if webhook_schema.message.text != "/start":
         return JSONResponse(content={"success": True})
-    
+
     chat = webhook_schema.message.chat
     telegram_user = staff_repository.get_by_chat_id(db, chat_id=chat.id)
     if telegram_user:
         return JSONResponse(content={"success": True})
-    
+
     staff_schema = StaffCreateSchema(
         name=chat.first_name,
         erp_username="",
@@ -74,7 +73,7 @@ async def webhook(
     )
 
     staff_repository.create(db, obj_schema=staff_schema)
-    
+
     message = f"""{staff_schema.name}, добро пожаловать в Фарфор Бот
 Ваш ID: {staff_schema.chat_id}
 Для подключения к боту, обратитесь в техподдержку, сообщив им Ваш ID и логин в ERP
@@ -85,7 +84,7 @@ async def webhook(
 
 @router.put("/", dependencies=[Depends(get_superuser)])
 def set_webhook_url(domain: HttpUrl):
-    url = f'{domain}/api/webhook/{settings.TELEGRAM_TOKEN}'
+    url = f"{domain}/api/webhook/{settings.TELEGRAM_TOKEN}"
     result = telegram_service.set_webhook(url)
     return {"success": result}
 

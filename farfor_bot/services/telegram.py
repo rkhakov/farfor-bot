@@ -10,12 +10,12 @@ bot = Bot(token=settings.TELEGRAM_TOKEN)
 
 def send_photo(chat_id: int, photo_url: str, caption: str):
     bot.send_photo(chat_id=chat_id, photo=photo_url, caption=caption)
-    
-    
+
+
 def send_message(chat_id: int, message: str):
     bot.send_message(chat_id=chat_id, text=message)
-    
-    
+
+
 class WebhookInfoSchema(BaseModel):
     url: str
 

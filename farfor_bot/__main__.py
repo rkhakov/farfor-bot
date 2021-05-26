@@ -12,7 +12,9 @@ from farfor_bot.config import settings
 from farfor_bot.database.core import Base, engine
 
 
-ALEMBIC_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "database/alembic.ini")
+ALEMBIC_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "database/alembic.ini"
+)
 
 
 @click.group()
@@ -30,8 +32,13 @@ def server():
 @server.command("develop")
 def run_server(log_level: str = "debug"):
     # TODO Добавить выбор уровня логов
-    uvicorn.run("farfor_bot.main:app", debug=True, log_level=log_level, port=settings.DEV_SERVER_PORT)
-    
+    uvicorn.run(
+        "farfor_bot.main:app",
+        debug=True,
+        log_level=log_level,
+        port=settings.DEV_SERVER_PORT,
+    )
+
 
 @server.command("shell")
 @click.argument("ipython_args", nargs=-1, type=click.UNPROCESSED)
@@ -70,19 +77,19 @@ def database():
 def init_database():
     """Инициализация базы"""
     from sqlalchemy_utils import create_database, database_exists
-    
+
     if not database_exists(settings.SQLALCHEMY_DATABASE_URI):
         create_database(settings.SQLALCHEMY_DATABASE_URI)
-    
+
     Base.metadata.create_all(engine)
     alimbic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.stamp(alimbic_cfg, "head")
-    
+
     # Создаем дефолтные записи в БД
 
     click.secho("Success.", fg="green")
-    
-    
+
+
 @database.command("revision")
 @click.option("-m", "--message", required=True, help="Название ревизии")
 @click.option(
@@ -94,7 +101,7 @@ def init_database():
 def revision_database(message, autogenerate):
     """Создает ревизию"""
     import time
-    
+
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.revision(
         alembic_cfg,
@@ -107,7 +114,7 @@ def revision_database(message, autogenerate):
         version_path=None,
         rev_id=str(int(time.time())),
     )
-    
+
 
 @database.command("upgrade")
 @click.option("-r", "--revision", nargs=1, default="head", help="Идентификатор ревизии")
@@ -132,7 +139,7 @@ def upgrade_database(revision):
             alembic_command.upgrade(alembic_cfg, revision, sql=False, tag=None)
 
     click.secho("Success.", fg="green")
-    
+
 
 @database.command("downgrade")
 @click.option("-r", "--revision", nargs=1, default="head", help="Идентификатор ревизии")
@@ -141,25 +148,25 @@ def downgrade_database(revision):
     Откатить изменения
 
     Для того чтобы откатится на предыдущую ревизию, необходимо передать -1
-    
+
     Пример:
         > farfof_bot database downgrade -r -1
     """
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.downgrade(alembic_cfg, revision, sql=False, tag=None)
     click.secho("Success.", fg="green")
-    
+
 
 @database.command("drop")
 @click.option("--yes", is_flag=True, help="Удалить базу без подтверждения")
 def drop_database(yes):
     """Удалить базу"""
     from sqlalchemy_utils import drop_database
-    
+
     if yes:
         drop_database(settings.SQLALCHEMY_DATABASE_URI)
         click.secho("Success.", fg="green")
-        
+
     if click.confirm(
         f"Вы уверены что хотите удалить базу: '{settings.DATABASE_HOST}:{settings.DATABASE_NAME}'?"
     ):

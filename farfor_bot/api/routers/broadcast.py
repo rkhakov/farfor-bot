@@ -28,7 +28,9 @@ class ResponseSchema(BaseModel):
 def camera_event(event: CameraEvent, db: Session = Depends(get_db)):
     caption = f"Заказ: {event.order_id}\nСтанция: {event.station}"
 
-    staff_objects = staff_repository.get_manager_by_point_ids(db, point_ids=event.point_ids)
+    staff_objects = staff_repository.get_manager_by_point_ids(
+        db, point_ids=event.point_ids
+    )
 
     for staff in staff_objects:
         telegram_service.send_photo(staff.chat_id, event.snapshot_url, caption)

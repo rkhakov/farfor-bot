@@ -24,6 +24,6 @@ class StaffUpdateSchema(StaffBaseSchema):
 class StaffSchema(StaffBaseSchema):
     id: int
     chat_id: int
-    
+
     class Config:
         orm_mode = True

@@ -24,7 +24,8 @@ def users_list(
 
 @router.post("/", response_model=UserSchema)
 def create_user(
-    *, db: Session = Depends(get_db),
+    *,
+    db: Session = Depends(get_db),
     user_schema: UserCreateSchema,
     current_user: User = Depends(get_superuser),
 ):
@@ -32,9 +33,9 @@ def create_user(
     if user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Пользователь с логином {user_schema.login} уже существует"
+            detail=f"Пользователь с логином {user_schema.login} уже существует",
         )
-        
+
     user = user_repository.create(db, obj_schema=user_schema)
     return user
 
@@ -48,15 +49,18 @@ def get_user_by_id(
     user = user_repository.get(db, id=user_id)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден",
         )
 
     if user == current_user:
         return user
-    
+
     if not user_repository.is_superuser(current_user):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав")
-    
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
+        )
+
     return user
 
 
@@ -71,15 +75,18 @@ def update_user(
     user = user_repository.get(db, id=user_id)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден",
         )
-    
+
     if user == current_user:
         user = user_repository.update(db, db_obj=user, obj_schema=user_schema)
         return user
-    
+
     if not user_repository.is_superuser(current_user):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав")
-    
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Недостаточно прав"
+        )
+
     user = user_repository.update(db, db_obj=user, obj_schema=user_schema)
     return user

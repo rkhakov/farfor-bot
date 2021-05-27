@@ -7,9 +7,11 @@ from pydantic import BaseSettings, PostgresDsn, validator
 class Settings(BaseSettings):
     # Project
     PROJECT_NAME: str = "Farfor Bot"
-    DEV_SERVER_PORT: int = 8900
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 дней
     SECRET_KEY: str
+
+    DEFAULT_USER_LOGIN: Optional[str] = None
+    DEFAULT_USER_PASSWORD: Optional[str] = None
 
     # Telegram
     TELEGRAM_TOKEN: str

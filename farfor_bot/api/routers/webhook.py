@@ -13,7 +13,7 @@ from farfor_bot.services import telegram_service
 router = APIRouter()
 
 
-class ChatSchema(BaseModel):
+class FromChatSchema(BaseModel):
     id: int
     first_name: str
     username: str
@@ -22,7 +22,7 @@ class ChatSchema(BaseModel):
 class MessageSchema(BaseModel):
     message_id: int
     text: str
-    chat: ChatSchema = Field(alias="from")
+    from_chat: FromChatSchema = Field(alias="from")
 
 
 class WebhookSchema(BaseModel):
@@ -59,15 +59,15 @@ async def webhook(
     if webhook_schema.message.text != "/start":
         return JSONResponse(content={"success": True})
 
-    chat = webhook_schema.message.chat
-    telegram_user = staff_repository.get_by_chat_id(db, chat_id=chat.id)
+    from_chat = webhook_schema.message.from_chat
+    telegram_user = staff_repository.get_by_chat_id(db, chat_id=from_chat.id)
     if telegram_user:
         return JSONResponse(content={"success": True})
 
     staff_schema = StaffCreateSchema(
-        name=chat.first_name,
+        name=from_chat.first_name,
         erp_username="NULL",  # будет устанавливаться вручную
-        chat_id=chat.id,
+        chat_id=from_chat.id,
     )
 
     staff_repository.create(db, obj_schema=staff_schema)

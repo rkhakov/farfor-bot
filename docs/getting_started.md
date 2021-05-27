@@ -33,12 +33,8 @@
 
 > Переменные окружения приоритетнее над файлом `.env`
 
-```shell
-export TELEGRAM_TOKEN=SECRET_TOKEN
-```
 
-
-## Запускаем базу
+## Поднимаем базу
 ```shell
 > docker-compose up -d
 ```
@@ -51,9 +47,17 @@ export TELEGRAM_TOKEN=SECRET_TOKEN
 > poetry run farfor_bot database init
 ```
 
+## Создание дефолтных записей в базе
+На данный момент используется только для создания дефолтного супер пользователя.
+Логин и пароль пользователя передаюся в `.env` файле,
+в параметрах `DEFAULT_USER_LOGIN` и `DEFAULT_USER_PASSWORD`
+```shell
+> poetry run farfor_bot database default_records
+```
+
 
 ## Запуск develop окружения
-После установки зависимостей можно запустить дев сервер используя cli.
+После установки зависимостей можно запустить дев сервер используя CLI.
 ```shell
 > poetry run farfor_bot server develop
 ```
@@ -64,19 +68,23 @@ export TELEGRAM_TOKEN=SECRET_TOKEN
 ```
 
 
-## Активация виртуального окружения
-Если удобней работать через виртульное окружение, не используя `poetry run`, то активируем его командой
+## Установка прекоммит хуков
 ```shell
-> source .venv/bin/activate
+> poetry run pre-commit install
 ```
 
-После активации команды cli нужно запускать следующим образом
-```shell
-> python -m farfor_bot --help
-```
+
+## Телеграм вебхук
+Для локального тестирования вебхука, можно воспользоваться [ngrok](https://www.npmjs.com/package/ngrok)
 
 
 ## OpenAPI Doc
-По умолчанию проект стартут на 8900 порту
+По умолчанию проект стартут на порту `8900`
 
 * [Документация API](http://127.0.0.1:8900/docs)
+
+
+## Warnings
+После запуска проекта, всплывает предупреждение об устаревших функциях криптографии из библиотеки python-jose.
+Пулл реквест с исправлением https://github.com/mpdavis/python-jose/pull/229 был смерджен.
+С выходом новой версии нужно будет обновить `python-jose`.

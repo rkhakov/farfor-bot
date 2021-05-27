@@ -1,10 +1,14 @@
+import logging
+
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from telegram import Bot
+from telegram.error import TelegramError
 
 from farfor_bot.config import settings
 
 
+logger = logging.getLogger(__name__)
 bot = Bot(token=settings.TELEGRAM_TOKEN)
 
 
@@ -26,7 +30,11 @@ def get_webhook_info() -> WebhookInfoSchema:
 
 
 def set_webhook(url: str):
-    return bot.set_webhook(str(url))
+    try:
+        return bot.set_webhook(str(url))
+    except TelegramError:
+        logger.exception("Ошибка установки вебхука телеграм бота")
+        return False
 
 
 def delete_webhook():

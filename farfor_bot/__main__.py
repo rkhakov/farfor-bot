@@ -37,6 +37,7 @@ def server():
 )
 @click.option("--log-level", default="debug", help="Уровень логов")
 def run_server(log_level: str, port: int):
+    """Запустить дев сервер"""
     uvicorn.run(
         "farfor_bot.main:app",
         debug=True,
@@ -81,7 +82,7 @@ def database():
 
 @database.command("init")
 def init_database():
-    """Инициализация базы"""
+    """Инициализировать базу"""
     from sqlalchemy_utils import create_database, database_exists
 
     if not database_exists(settings.SQLALCHEMY_DATABASE_URI):
@@ -91,9 +92,53 @@ def init_database():
     alimbic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.stamp(alimbic_cfg, "head")
 
-    # Создаем дефолтные записи в БД
+    click.secho("База создана", fg="green")
 
-    click.secho("Success.", fg="green")
+
+@database.command("default_records")
+def create_default_records():
+    """Создать дефолтные записи в базе"""
+
+    if not settings.DEFAULT_USER_LOGIN and settings.DEFAULT_USER_PASSWORD:
+        return
+
+    from farfor_bot.database.core import SessionLocal
+    from farfor_bot.repositories import user_repository
+    from farfor_bot.schemas import UserCreateSchema
+
+    db_session = SessionLocal()
+
+    user_schema = UserCreateSchema(
+        login=settings.DEFAULT_USER_LOGIN,
+        password=settings.DEFAULT_USER_PASSWORD,
+        is_active=True,
+        is_admin=True,
+        is_superuser=True,
+    )
+    if not user_repository.get_by_login(db_session, login=user_schema.login):
+        user_repository.create(db_session, obj_schema=user_schema)
+        click.secho("Пользователь создан", fg="green")
+
+
+@database.command("heads")
+def heads():
+    """Показать heads ревизий"""
+    alembic_cfg = AlembicConfig(ALEMBIC_PATH)
+    alembic_command.heads(alembic_cfg)
+
+
+@database.command("current")
+def current_database():
+    """Показать текущую версию ревизии в базе"""
+    alembic_cfg = AlembicConfig(ALEMBIC_PATH)
+    alembic_command.current(alembic_cfg)
+
+
+@database.command("history")
+def history_database():
+    """Показать историю ревизий"""
+    alembic_cfg = AlembicConfig(ALEMBIC_PATH)
+    alembic_command.history(alembic_cfg)
 
 
 @database.command("revision")
@@ -105,7 +150,7 @@ def init_database():
     help=("Автогенерация ревизии по последним изменениям в моделях"),
 )
 def revision_database(message, autogenerate):
-    """Создает ревизию"""
+    """Создать ревизию"""
     import time
 
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
@@ -144,7 +189,7 @@ def upgrade_database(revision):
         else:
             alembic_command.upgrade(alembic_cfg, revision, sql=False, tag=None)
 
-    click.secho("Success.", fg="green")
+    click.secho("Успешно", fg="green")
 
 
 @database.command("downgrade")
@@ -153,14 +198,15 @@ def downgrade_database(revision):
     """
     Откатить изменения
 
-    Для того чтобы откатится на предыдущую ревизию, необходимо передать -1
+    Для того чтобы откатить последнюю ревизию,
+     необходимо передать иденификатор ревизии -1
 
     Пример:
         > farfof_bot database downgrade -r -1
     """
     alembic_cfg = AlembicConfig(ALEMBIC_PATH)
     alembic_command.downgrade(alembic_cfg, revision, sql=False, tag=None)
-    click.secho("Success.", fg="green")
+    click.secho("Успешно", fg="green")
 
 
 @database.command("drop")
@@ -178,35 +224,53 @@ def drop_database(yes):
         f"'{settings.DATABASE_HOST}:{settings.DATABASE_NAME}'?"
     ):
         drop_database(settings.SQLALCHEMY_DATABASE_URI)
-        click.secho("Success.", fg="green")
+        click.secho("База удалена", fg="green")
 
 
-@database.command("dump")
-@click.option(
-    "--dump-file",
-    default="farfor-bot-backup.dump",
-    help="Файл куда будет сохранен дамп",
-)
-def dump_database(dump_file):
-    """Дамп базы"""
-    try:
-        from sh import pg_dump
-    except ImportError:
-        click.secho("Утилита pg_dump не найдена", fg="red")
-        return
+@farfor_bot.group("telegram")
+def telegram():
+    """Команды для управления телеграм ботом"""
+    pass
 
-    pg_dump(
-        "-f",
-        dump_file,
-        "-h",
-        settings.DATABASE_HOST,
-        "-p",
-        settings.DATABASE_PORT,
-        "-U",
-        settings.DATABASE_USER,
-        settings.DATABASE_NAME,
-        _env={"PGPASSWORD": settings.DATABASE_PASSWORD},
-    )
+
+@telegram.command("get_webhook")
+def get_webhook():
+    """Получить установленный в боте URL вебхука"""
+    from farfor_bot.services import telegram_service
+
+    webhook_info = telegram_service.get_webhook_info()
+    if webhook_info.url:
+        table = []
+        for key, value in webhook_info:
+            table.append([key, value])
+        click.secho(tabulate(table, headers=["Key", "Value"]), fg="blue")
+    else:
+        click.secho("Вебхук не установлен", fg="yellow")
+
+
+@telegram.command("set_webhook")
+@click.option("--url", required=True, help="URL вебхука для телеграм бота")
+def set_webhook(url):
+    """
+    Установить URL вебхука для телеграм бота в том виде как он передан
+
+    Протокол обязательно должен быть https
+    """
+    from farfor_bot.services import telegram_service
+
+    if telegram_service.set_webhook(url):
+        click.secho("Вебхук установлен", fg="green")
+    else:
+        click.secho("Ошибка: Вебхук не установлен", fg="red")
+
+
+@telegram.command("delete_webhook")
+def delete_webhook():
+    """Удалить установленный вебхук телеграм бота"""
+    from farfor_bot.services import telegram_service
+
+    telegram_service.delete_webhook()
+    click.secho("Вебхук удален", fg="green")
 
 
 def entrypoint():

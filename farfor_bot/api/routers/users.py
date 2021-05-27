@@ -91,3 +91,26 @@ def update_user(
 
     user = user_repository.update(db, db_obj=user, obj_schema=user_schema)
     return user
+
+
+@router.delete("/{user_id}", response_model=UserSchema)
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_superuser),
+):
+    user = user_repository.get(db, id=user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден",
+        )
+
+    if user == current_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Вы не можете удалить своего пользователя",
+        )
+
+    user = user_repository.delete(db, id=user_id)
+    return user

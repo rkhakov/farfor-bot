@@ -13,16 +13,18 @@
 * [x] Конфиги vscode pycharm для запуска проекта
 * [ ] Конфиг логгера
 * [ ] Sentry
-* [ ] Обработка ошибок
+* [ ] Обработка ошибок orm
 * [x] Прекоммит хуки
 * [x] Docker
 * [ ] k8s
 * [ ] CI/CD
 * [ ] Frontend
 * [ ] Health check
+* [ ] locust
 * [ ] Тесты
   * [ ] Stairway тест миграций
   * [ ] API
+  * [ ] coverage
 * [x] OAuth
     * [x] Аутентификация
     * [x] Проверка токена

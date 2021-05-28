@@ -10,7 +10,7 @@ from farfor_bot.config import settings
 from farfor_bot.database.core import SessionLocal
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
-from farfor_bot.secutiry import ALGORITHM
+from farfor_bot.security import ALGORITHM
 
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/api/auth/login")

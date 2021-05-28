@@ -11,7 +11,7 @@ from farfor_bot.config import settings
 from farfor_bot.models import User
 from farfor_bot.repositories import user_repository
 from farfor_bot.schemas import UserSchema
-from farfor_bot.secutiry import create_access_token
+from farfor_bot.security import create_access_token
 
 
 router = APIRouter()

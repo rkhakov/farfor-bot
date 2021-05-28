@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from farfor_bot.models import User
 from farfor_bot.schemas import UserCreateSchema, UserUpdateSchema
-from farfor_bot.secutiry import get_password_hash, verify_password
+from farfor_bot.security import get_password_hash, verify_password
 
 from .base import BaseRepository
 

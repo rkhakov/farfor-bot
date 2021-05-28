@@ -12,7 +12,8 @@
             "args": [
                 "farfor_bot.main:app",
                 "--port",
-                "8900"
+                "8900",
+                "--reload"
             ],
             "jinja": true
         }

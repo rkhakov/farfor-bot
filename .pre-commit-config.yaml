@@ -8,7 +8,7 @@ repos:
       - id: check-merge-conflict
       - id: check-toml
       - id: end-of-file-fixer
-        exclude_types: [svg, css, html, less, javascript, json, coffee, map, markdown]
+        exclude_types: [markdown]
   - repo: local
     hooks:
       - id: black

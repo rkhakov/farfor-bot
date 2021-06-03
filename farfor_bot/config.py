@@ -10,9 +10,6 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 дней
     SECRET_KEY: str
 
-    DEFAULT_USER_LOGIN: Optional[str] = None
-    DEFAULT_USER_PASSWORD: Optional[str] = None
-
     # Telegram
     TELEGRAM_TOKEN: str
 
@@ -31,11 +28,11 @@ class Settings(BaseSettings):
 
         return PostgresDsn.build(
             scheme="postgresql",
-            host=values.get("DATABASE_HOST"),
-            port=values.get("DATABASE_PORT"),
-            user=values.get("DATABASE_USER"),
-            password=values.get("DATABASE_PASSWORD"),
-            path=f'/{values.get("DATABASE_NAME", "")}',
+            host=values["DATABASE_HOST"],
+            port=values["DATABASE_PORT"],
+            user=values["DATABASE_USER"],
+            password=values["DATABASE_PASSWORD"],
+            path=f'/{values["DATABASE_NAME"]}',
         )
 
     class Config:

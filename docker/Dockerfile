@@ -4,6 +4,8 @@ FROM python:3.9-slim as python-base
 ENV PYTHONBUFFERED=1 \
     # Отключаем .pyc
     PYTHONDONTWRITEBYTECODE=1 \
+    # Отключаем warnings
+    PYTHONWARNINGS="ignore" \
     \
     # PIP
     # Отключаем кеширование
@@ -48,10 +50,10 @@ RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poet
 # Меняем рабочую директорию
 WORKDIR $PROJECT_SETUP_PATH
 
-# Билдим отдельно чтобы закешировать
-# Docker пропустит этот шаг если файлы не изменятся
+# Копируем, билдим и устанавливаем
 COPY ./poetry.lock ./pyproject.toml ./
 COPY ./farfor_bot ./farfor_bot
+
 RUN poetry build
 
 RUN pip install -U ./dist/*.whl

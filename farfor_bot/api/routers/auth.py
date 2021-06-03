@@ -34,7 +34,7 @@ def login(
         raise HTTPException(status_code=400, detail="Неправильный логин или пароль")
 
     if not user_repository.is_active(user):
-        raise HTTPException(status_code=400, detail="Пользовател деактивирован")
+        raise HTTPException(status_code=400, detail="Пользователь деактивирован")
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(user.id, expires_delta=access_token_expires)

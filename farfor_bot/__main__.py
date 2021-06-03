@@ -95,12 +95,11 @@ def init_database():
     click.secho("База создана", fg="green")
 
 
-@database.command("default_records")
-def create_default_records():
-    """Создать дефолтные записи в базе"""
-
-    if not settings.DEFAULT_USER_LOGIN and settings.DEFAULT_USER_PASSWORD:
-        return
+@database.command("create_superuser")
+@click.option("--login", required=True, help="Логин")
+@click.option("--password", required=True, help="Пароль")
+def create_superuser(login, password):
+    """Создать супер пользователя"""
 
     from farfor_bot.database.core import SessionLocal
     from farfor_bot.repositories import user_repository
@@ -109,15 +108,17 @@ def create_default_records():
     db_session = SessionLocal()
 
     user_schema = UserCreateSchema(
-        login=settings.DEFAULT_USER_LOGIN,
-        password=settings.DEFAULT_USER_PASSWORD,
+        login=login,
+        password=password,
         is_active=True,
         is_admin=True,
         is_superuser=True,
     )
     if not user_repository.get_by_login(db_session, login=user_schema.login):
         user_repository.create(db_session, obj_schema=user_schema)
-        click.secho("Пользователь создан", fg="green")
+        click.secho(f"Пользователь {login} создан", fg="green")
+    else:
+        click.secho(f"Пользователь {login} уже существует", fg="red")
 
 
 @database.command("heads")

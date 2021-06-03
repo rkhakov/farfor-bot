@@ -16,7 +16,9 @@
 * [ ] Обработка ошибок orm
 * [x] Прекоммит хуки
 * [x] Docker
-* [ ] k8s
+* [x] k8s
+* [x] auto scale
+* [ ] ssl
 * [ ] CI/CD
 * [ ] Frontend
 * [ ] Health check

@@ -108,23 +108,13 @@ Commands:
 Инициализирует базу и запускает ревизии
 ```shell
 > farfor_bot database init
-> farfor_bot database init --help
-
-Usage: farfor_bot database init [OPTIONS]
-
-  Инициализация базы
 ```
 
 
-### default_records
-Создает дефолтные записи в базе
+### create_superuser
+Создать супер пользователя
 ```shell
-> farfor_bot database default_records
-> farfor_bot database default_records --help
-
-Usage: farfor_bot database default_records [OPTIONS]
-
-  Создает дефолтные записи в базе
+> farfor_bot database create_superuser --login admin --password admin
 ```
 
 
@@ -132,11 +122,6 @@ Usage: farfor_bot database default_records [OPTIONS]
 Команда alembic heads, показывает заглавные ревизии
 ```shell
 > farfor_bot database heads
-> farfor_bot database heads --help
-
-Usage: farfor_bot database heads [OPTIONS]
-
-  Показать heads ревизий
 ```
 
 
@@ -144,23 +129,13 @@ Usage: farfor_bot database heads [OPTIONS]
 Команда alembic current, показывает последнюю применную ревизию в базе
 ```shell
 > farfor_bot database current
-> farfor_bot database current --help
-
-Usage: farfor_bot database current [OPTIONS]
-
-  Показать текущую версию ревизии в базе
 ```
 
 
 ### history
 Команда alembic history, показывает историю ревизий
 ```shell
-> farfor_bot database history 
-> farfor_bot database history --help
-
-Usage: farfor_bot database history [OPTIONS]
-
-  Показать историю ревизий
+> farfor_bot database history
 ```
 
 
@@ -169,15 +144,6 @@ Alimbic команда для создания ревизии. Название 
 
 ```shell
 > farfor_bot database revision -auto -m "message"
-> farfor_bot database revision --help
-
-Usage: farfor_bot database revision [OPTIONS]
-
-  Создает ревизию
-
-Options:
-  -m, --message TEXT     Название ревизии  [required]
-  -auto, --autogenerate  Автогенерация ревизии по последним изменениям в моделях
 ```
 
 
@@ -186,14 +152,6 @@ Alembic команда для применения ревизии.
 
 ```shell
 > farfor_bot database upgrade
-> farfor_bot database upgrade --help
-
-Usage: farfor_bot database upgrade [OPTIONS]
-
-  Обновить состояние базы до последней (или указанной) версии ревизии
-
-Options:
-  -r, --revision TEXT  Идентификатор ревизии
 ```
 
 
@@ -203,18 +161,6 @@ Alembic команда для отката ревизии
 ```shell
 # Откат последней ревизии
 > farfor_bot database downgrade -r -1
-> farfor_bot database downgrade --help
-
-Usage: farfor_bot database downgrade [OPTIONS]
-
-  Откатить изменения
-
-  Для того чтобы откатить последнюю ревизию, необходимо передать иденификатор ревизии -1
-
-  Пример:     > farfof_bot database downgrade -r -1
-
-Options:
-  -r, --revision TEXT  Идентификатор ревизии
 ```
 
 ### drop
@@ -222,14 +168,6 @@ Options:
 
 ```shell
 > farfor_bot database drop
-> farfor_bot database drop --help
-     
-Usage: farfor_bot database drop [OPTIONS]
-
-  Удалить базу
-
-Options:
-  --yes   Удалить базу без подтверждения
 ```
 
 
@@ -242,11 +180,6 @@ Options:
 
 ```shell
 > farfor_bot telegram get_webhook
-> farfor_bot telegram get_webhook --help
-
-Usage: farfor_bot telegram get_webhook [OPTIONS]
-
-  Получить установленный в боте URL вебхука
 ```
 
 
@@ -256,16 +189,6 @@ Usage: farfor_bot telegram get_webhook [OPTIONS]
 
 ```shell
 > farfor_bot telegram set_webhook --url "https://domain_name.com/webhook"
-> farfor_bot telegram set_webhook --help
-
-Usage: farfor_bot telegram set_webhook [OPTIONS]
-
-  Установить URL вебхука для телеграм бота в том виде как он передан
-
-  Протокол обязательно должен быть https
-
-Options:
-  --url TEXT  URL вебхука для телеграм бота  [required]
 ```
 
 ### delete_webhook
@@ -273,9 +196,4 @@ Options:
 
 ```shell
 > farfor_bot telegram delete_webhook
-> farfor_bot telegram delete_webhook --help
-
-Usage: farfor_bot telegram delete_webhook [OPTIONS]
-
-  Удалить установленный вебхук телеграм бота
 ```

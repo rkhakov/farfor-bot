@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "chart.fullname" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  commonName: {{ .Values.certificate.commonName | quote }}
+  secretName: {{ .Values.certificate.secretName }}
+  dnsNames:
+    {{- range .Values.certificate.dnsNames }}
+    - {{ . | quote }}
+    {{- end }}
+  issuerRef:
+    kind: Issuer
+    name: {{ .Values.certificate.issuerName }}

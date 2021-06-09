@@ -18,10 +18,10 @@
 * [x] Docker
 * [x] k8s
 * [x] auto scale
-* [ ] ssl
+* [x] ssl
 * [ ] CI/CD
 * [ ] Frontend
-* [ ] Health check
+* [x] Health check
 * [ ] locust
 * [ ] Тесты
   * [ ] Stairway тест миграций
